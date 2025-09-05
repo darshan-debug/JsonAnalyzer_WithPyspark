@@ -1,0 +1,5 @@
+'{"product_id": 98765, "product_name": "Ultra HD 4K Monitor", "is_available": false, "specifications": {"color": "silver", "weight_grams": 4500}, "tags": ["display", "4K", "gaming", "home_office"]}'
+'{"product_id": 24680, "product_name": "Portable Bluetooth Speaker", "is_available": true, "specifications": {"color": "blue", "weight_grams": 750}, "tags": ["audio", "bluetooth", "portable", "rechargeable"]}'
+'{"product_id": 13579, "product_name": "Smart Coffee Maker", "is_available": true, "specifications": {"color": "white", "weight_grams": 2100}, "tags": ["kitchen", "smart_home", "coffee", "app_controlled"]}'
+'{"product_id": 11223, "product_name": "Wireless Charging Pad", "is_available": false, "specifications": {"color": "black", "weight_grams": 300}, "tags": ["charging", "wireless", "mobile_accessory"]}'
+'{"product_id": 33445, "product_name": "Noise Cancelling Headphones", "is_available": true, "specifications": {"color": "red", "weight_grams": 250}, "tags": ["audio", "headphones", "noise_cancelling", "wireless"]}'
