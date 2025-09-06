@@ -3,14 +3,15 @@
 import os
 import pandas as pd
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, udf,explode,max,pandas_udf,asc
+from pyspark.sql.functions import col, udf,explode,max,pandas_udf,asc,sum
 from pyspark.sql.types import *
 import json
 
 # Define the UDF output schema
 output_schema = ArrayType(StructType([
     StructField("key_path", StringType(), True),
-    StructField("max_value_or_len", LongType(), True)
+    StructField("max_value_or_len", LongType(), True),
+    StructField("key_freq", LongType(), True)
 ]))
 
 #A Pandas UDF(also called vectorised udf) is a type of PySpark UDF that uses Apache Arrow to transfer data between the Python worker and the JVM (Spark's core). It operates on batches of data, rather than row by row. This vectorization significantly reduces the serialization overhead, leading to much better performance for certain types of operations
@@ -26,18 +27,18 @@ def process_payload(payload_series):
                 if(isinstance(valuee,bool)):
                     continue
                 elif(isinstance(valuee,(int,float))):
-                    results.append((new_path,valuee))
+                    results.append((new_path,valuee,1))
                 elif(isinstance(valuee,str)):
-                    results.append((new_path,len(valuee)))
+                    results.append((new_path,len(valuee),1))
                 elif(isinstance(valuee,(list,dict))):
                     results.extend(process_json_payload(valuee,new_path))
         elif(isinstance(obj,list)):
             for item in obj:
                 results.extend(process_json_payload(item,path))
         elif(isinstance(obj,str)):
-            results.append((path,len(obj)))
+            results.append((path,len(obj),1))
         elif(isinstance(obj,(int,float))):
-            results.append((path,obj))
+            results.append((path,obj,1))
         return results
     for payload in payload_series:
         try:
@@ -83,7 +84,7 @@ if __name__ == "__main__":
     exploded_df= exploded_df.repartition(col("exploded.key_path")) #optional, it distributes workload evenly across cluster nodes based on key_path
     #orderBy is optionalin below code, its just to get sorted output
     # key_path and max_value_or_len are coming from "output_schema" ,which is the output schema of process_payload udf
-    result_df = exploded_df.groupBy(col("exploded.key_path")).agg(max(col("exploded.max_value_or_len")).alias('max_value_or_len')).orderBy(asc("key_path"))
+    result_df = exploded_df.groupBy(col("exploded.key_path")).agg(max(col("exploded.max_value_or_len")).alias('max_value_or_len'),sum(col("exploded.key_freq")).alias('key_freq')).orderBy(asc("key_path"))
     
     
     result_df.show(truncate=False)
