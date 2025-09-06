@@ -32,7 +32,10 @@ def process_payload(payload_series):
                     results.append((new_path,len(valuee),1))
                 elif(isinstance(valuee,(list,dict))):
                     #results.append((new_path+'(freqAskey)',-1,1))
-                    results.append((new_path+'(sumEleCount)',-1,len(valuee)))                                            
+                    if(isinstance(valuee,list) and len(valuee)>0):
+                        results.append((new_path+'(sumEleCount)',-1,len(valuee)))
+                    elif(isinstance(valuee,dict) and len(valuee)>0): 
+                        results.append((new_path+'(freqAskey)',-1,1))                                   
                     results.extend(process_json_payload(valuee,new_path))
         elif(isinstance(obj,list)):
             for item in obj:
