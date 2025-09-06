@@ -55,6 +55,7 @@ The final output columns provide the following key metrics:
 
 * `max_value_or_len`: This column represents the highest numeric value for each key or the maximum length of a string value. For keys that represent a list or map, this value is set to `-1`.
 * `key_freq`: This column measures the frequency of each key's occurrence across all processed messages. For array objects, it additionally stores the total sum of element counts, providing a more granular insight into nested data.
+* `sample interpretation`: the largest value in int key: `product_id` is `99001`. Secondly, `Specifications` key which has `array` value , and it had `11` elements in total.in all the elements for above array key: `weight_grams` was present, since its frequency is also `11`.
 
 ### 🧑‍💻 Developed By:
 
