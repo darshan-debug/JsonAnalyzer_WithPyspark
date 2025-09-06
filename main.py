@@ -3,7 +3,7 @@
 import os
 import pandas as pd
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, udf,explode,max,pandas_udf
+from pyspark.sql.functions import col, udf,explode,max,pandas_udf,asc
 from pyspark.sql.types import *
 import json
 
@@ -80,7 +80,12 @@ if __name__ == "__main__":
     # |{product_id, 98765}                |
     # |{product_name, 19}                 |
     # |{specifications.color, 6}          |
-    result_df = exploded_df.groupBy(col("exploded.key_path")).agg(max(col("exploded.max_value_or_len")).alias('max_value_or_len'))
+    exploded_df= exploded_df.repartition(col("exploded.key_path")) #optional, it distributes workload evenly across cluster nodes based on key_path
+    #orderBy is optionalin below code, its just to get sorted output
+    # key_path and max_value_or_len are coming from "output_schema" ,which is the output schema of process_payload udf
+    result_df = exploded_df.groupBy(col("exploded.key_path")).agg(max(col("exploded.max_value_or_len")).alias('max_value_or_len')).orderBy(asc("key_path"))
+    
+    
     result_df.show(truncate=False)
     # |tags                       |16                            |
     # |product_name               |27                            |

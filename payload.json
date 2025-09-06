@@ -3,3 +3,8 @@
 {"product_id": 13579, "product_name": "Smart Coffee Maker", "is_available": true, "specifications": [{"color": "white", "weight_grams": 2100}], "tags": ["kitchen", "smart_home", "coffee", "app_controlled"]}
 {"product_id": 11223, "product_name": "Wireless Charging Pad", "is_available": false, "specifications": [{"color": "black", "weight_grams": 300}], "tags": ["charging", "wireless", "mobile_accessory"]}
 {"product_id": 33445, "product_name": "Noise Cancelling Headphones", "is_available": true, "specifications": [{"color": "red", "weight_grams": 250}], "tags": ["audio", "headphones", "noise_cancelling", "wireless"]}
+{"product_id": 55667, "product_name": "4K Action Camera", "is_available": true, "specifications": [{"color": "black", "weight_grams": 120}], "tags": ["camera", "4K", "waterproof", "sports"]}
+{"product_id": 77889, "product_name": "Smart Thermostat", "is_available": false, "specifications": [{"color": "white", "weight_grams": 200}], "tags": ["smart_home", "thermostat", "energy_saving"]}
+{"product_id": 99001, "product_name": "Fitness Tracker", "is_available": true, "specifications": [{"color": "black", "weight_grams": 50}], "tags": ["fitness", "tracker", "wearable", "health"]}
+{"product_id": 22334, "product_name": "Electric Scooter", "is_available": true, "specifications": [{"color": "green", "weight_grams": 12000}], "tags": ["scooter", "electric", "transportation"]}
+{"product_id": 44556, "product_name": "Smart Light Bulb", "is_available": false, "specifications": [{"color": "white", "weight_grams": 100}], "tags": ["smart_home", "lighting", "energy_saving"]}
