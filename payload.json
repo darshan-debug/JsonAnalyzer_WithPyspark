@@ -7,4 +7,4 @@
 {"product_id": 77889, "product_name": "Smart Thermostat", "is_available": false, "specifications": [{"color": "white", "weight_grams": 200}], "tags": ["smart_home", "thermostat", "energy_saving"]}
 {"product_id": 99001, "product_name": "Fitness Tracker", "is_available": true, "specifications": [{"color": "black", "weight_grams": 50}], "tags": ["fitness", "tracker", "wearable", "health"]}
 {"product_id": 22334, "product_name": "Electric Scooter", "is_available": true, "specifications": [{"color": "green", "weight_grams": 12000}], "tags": ["scooter", "electric", "transportation"]}
-{"product_id": 44556, "product_name": "Smart Light Bulb", "is_available": false, "specifications": [{"color": "white", "weight_grams": 100}], "tags": ["smart_home", "lighting", "energy_saving"]}
+{"product_id": 44556, "product_name": "Smart Light Bulb", "is_available": false, "specifications": [{"color": "white", "weight_grams": 100}], "tags": ["smart_home", "lighting", "energy_saving"],"additional_info": {}}

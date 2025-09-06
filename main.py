@@ -31,14 +31,16 @@ def process_payload(payload_series):
                 elif(isinstance(valuee,str)):
                     results.append((new_path,len(valuee),1))
                 elif(isinstance(valuee,(list,dict))):
+                    results.append((new_path+'(key)',-1,1))
+                    results.append((new_path+'(sumEleCount)',-1,len(valuee)))                                            
                     results.extend(process_json_payload(valuee,new_path))
         elif(isinstance(obj,list)):
             for item in obj:
                 results.extend(process_json_payload(item,path))
         elif(isinstance(obj,str)):
-            results.append((path,len(obj),1))
+            results.append((path,len(obj),0))
         elif(isinstance(obj,(int,float))):
-            results.append((path,obj,1))
+            results.append((path,obj,0))
         return results
     for payload in payload_series:
         try:
@@ -87,7 +89,7 @@ if __name__ == "__main__":
     result_df = exploded_df.groupBy(col("exploded.key_path")).agg(max(col("exploded.max_value_or_len")).alias('max_value_or_len'),sum(col("exploded.key_freq")).alias('key_freq')).orderBy(asc("key_path"))
     
     
-    result_df.show(truncate=False)
+    result_df.show(n=result_df.count(),truncate=False)
     # |tags                       |16                            |
     # |product_name               |27                            |
     # |product_id                 |98765                         |
