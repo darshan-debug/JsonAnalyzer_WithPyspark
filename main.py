@@ -3,10 +3,21 @@
 import os
 import pandas as pd
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, udf,explode,max
+from pyspark.sql.functions import col, udf,explode,max,pandas_udf
 from pyspark.sql.types import *
 import json
-def process_payload(payload):
+
+# Define the UDF output schema
+output_schema = ArrayType(StructType([
+    StructField("key_path", StringType(), True),
+    StructField("max_value_or_len", LongType(), True)
+]))
+
+#A Pandas UDF(also called vectorised udf) is a type of PySpark UDF that uses Apache Arrow to transfer data between the Python worker and the JVM (Spark's core). It operates on batches of data, rather than row by row. This vectorization significantly reduces the serialization overhead, leading to much better performance for certain types of operations
+@pandas_udf(returnType=output_schema)
+def process_payload(payload_series):
+    #Parses a Pandas Series of JSON strings and returns a Pandas Series of lists.
+    results_list = []
     def process_json_payload(obj,path='.'):
         results=[]
         if(isinstance(obj,dict)):
@@ -28,18 +39,18 @@ def process_payload(payload):
         elif(isinstance(obj,(int,float))):
             results.append((path,obj))
         return results
-    try:
-        json_obj=json.loads(payload)
-        return process_json_payload(json_obj)
-    except Exception as e:
-        print(f"Error processing payload:{payload} \nError:{e}")
-        return []
+    for payload in payload_series:
+        try:
+            json_obj=json.loads(payload)
+            #return process_json_payload(json_obj)
+            results_list.append(process_json_payload(json_obj))
+        except Exception as e:
+            print(f"Error processing payload:{payload} \nError:{e}")
+            #return []
+            results_list.append([])
+    return pd.Series(results_list)
 
-# Define the UDF output schema
-output_schema = ArrayType(StructType([
-    StructField("key_path", StringType(), True),
-    StructField("max_value_or_len", LongType(), True)
-]))
+
 
 def test_process_payload():
     test_payload_array=['{"product_id": 9876.5, "product_name": "Ultra HD 4K Monitor", "is_available": false, "specifications": {"color": "silver", "weight_grams": 4500}, "tags": [{"display": ["4k","1028P"]}, {"gaming":"home_office"}]}',
@@ -57,12 +68,12 @@ if __name__ == "__main__":
 
     spark.sparkContext.setLogLevel("ERROR")
     payload_df=spark.read.format("text").schema('payload string').load("payload.json")
-    process_udf = udf(process_payload, output_schema)
+    #process_udf = udf(process_payload, output_schema) #after using decorator:@udf,  this is not needed
     # print(payload_df.count())
     #payload_df.show(truncate=False) #{"product_id": 98765, "product_name": "Ultra HD 4K Monitor", "is_available": false, "specifications": {"color": "silver", "weight_grams": 4500}, "tags": ["display", "4K", "gaming", "home_office"]} 
     #payload_df.printSchema() #payload: string (nullable = true)
 
-    processed_df = payload_df.withColumn("processed", process_udf(col("payload"))).select(col("processed"))
+    processed_df = payload_df.withColumn("processed", process_payload(col("payload"))).select(col("processed"))
     #processed_df.show(truncate=False)  #[{product_id, 98765}, {product_name, 19}, {specifications.color, 6}, {specifications.weight_grams, 4500}, {tags, 7}, {tags, 2}, {tags, 6}, {tags, 11}]
     exploded_df = processed_df.select(explode(col("processed")).alias("exploded"))
     #exploded_df.show(truncate=False) 
