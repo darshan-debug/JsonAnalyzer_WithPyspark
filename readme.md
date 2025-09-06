@@ -44,9 +44,11 @@ The utility generates a final summary table that can be used directly for data m
 #### Screenshots
 
 **Raw JSON Messages (payload.json)**
+
 ![raw payload](/assets/payload_jsons.JPG)
 
 **Final Output of the Transformations**
+
 ![raw payload](/assets/final_output.JPG)
 
 The final output columns provide the following key metrics:
